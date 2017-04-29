@@ -29,7 +29,7 @@ simply adding more instances into the cluster.
 
 To achieve this, a decentralized and built-in event layer in `gateway` provides
 highly available and efficient communication channel across the distributed system,
-so that instances of `gateway` can co-operate with each other in an even-driven
+so that instances of `gateway` can co-operate with each other in an event-driven
 way without relying on any centralized storage systems.
 
 # Features
