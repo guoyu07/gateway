@@ -13,10 +13,10 @@ func TestRegisterValidService(t *testing.T) {
 		name string
 		svc  *service.Service
 	}{
-		{"valid service", &service.Service{Name: "svc1", Labels: []string{"lb1"}}},
-		{"valid service name with 10 characters", &service.Service{Name: "validservi", Labels: []string{"lb1"}}},
-		{"valid service without labels", &service.Service{Name: "svc1"}},
-		{"valid service with 5 labels", &service.Service{Name: "svc1", Labels: []string{"lb1", "lb2", "lb3", "lb4", "lb5"}}},
+		{"valid service", &service.Service{Name: "validsvc1", Labels: []string{"lb1"}}},
+		{"valid service name with 10 characters", &service.Service{Name: "validsvc23", Labels: []string{"lb1"}}},
+		{"valid service without labels", &service.Service{Name: "validsvc3"}},
+		{"valid service with 5 labels", &service.Service{Name: "validsvc4", Labels: []string{"lb1", "lb2", "lb3", "lb4", "lb5"}}},
 	} {
 		t.Run(cs.name, func(t *testing.T) {
 			err := ServiceRegistry.Register(cs.svc)
@@ -55,6 +55,27 @@ func TestRegisterInvalidService(t *testing.T) {
 			err := ServiceRegistry.Register(cs.svc)
 			if err == nil {
 				t.Errorf("[%s] shouldn't register service(%+v)", cs.name, cs.svc)
+			}
+		})
+	}
+}
+
+func TestDeleteServiceByName(t *testing.T) {
+	t.Parallel()
+
+	for _, cs := range []struct {
+		name string
+		svc  *service.Service
+	}{
+		{"delete service by name", &service.Service{Name: "svc1"}},
+	} {
+		t.Run(cs.name, func(t *testing.T) {
+			if err := ServiceRegistry.Register(cs.svc); err != nil {
+				t.Errorf("can not register service(%+v) due to(%+v)", cs.svc, err)
+			}
+
+			if err := ServiceRegistry.DeleteByName(cs.svc.Name); err != nil {
+				t.Errorf("can not delete service by name due to(%+v)", err)
 			}
 		})
 	}

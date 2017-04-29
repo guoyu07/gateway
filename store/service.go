@@ -56,9 +56,36 @@ func (r *serviceRegistry) Register(svc *service.Service) (err error) {
 		return errors.Errorf("can not register service(%s) due to registry is not initialized properly", svc.Name)
 	}
 
+	if _, ok := r.registry[svc.Name]; ok {
+		return errors.Errorf("can not register duplicated service(%s)", svc.Name)
+	}
+
 	r.registry[svc.Name] = svc
 
 	r.mutex.Unlock()
 
 	return
+}
+
+func (r *serviceRegistry) DeleteByName(name string) (err error) {
+	r.mutex.Lock()
+	if r.registry == nil {
+		return errors.New("service registry not initialized properly")
+	}
+
+	if _, ok := r.registry[name]; !ok {
+		return errors.Errorf("cannot delete unknown service(%s)", name)
+	}
+
+	delete(r.registry, name)
+	r.mutex.Unlock()
+	return
+}
+
+func (r *serviceRegistry) FindByLabel(name string) (svcs []*service.Service, err error) {
+	return nil, errors.New("pending")
+}
+
+func (r *serviceRegistry) DeleteByLabel(label string) (err error) {
+	return errors.New("pending")
 }
