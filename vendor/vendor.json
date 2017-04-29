@@ -1,0 +1,67 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "YfhpW3cu1CHWX7lUCRparOJ6Vy4=",
+			"path": "github.com/armon/go-metrics",
+			"revision": "93f237eba9b0602f3e73710416558854a81d9337",
+			"revisionTime": "2017-01-14T13:47:37Z"
+		},
+		{
+			"checksumSHA1": "cdOCt0Yb+hdErz8NAQqayxPmRsY=",
+			"path": "github.com/hashicorp/errwrap",
+			"revision": "7554cd9344cec97297fa6649b055a8c98c2a1e55",
+			"revisionTime": "2014-10-28T05:47:10Z"
+		},
+		{
+			"checksumSHA1": "TNlVzNR1OaajcNi3CbQ3bGbaLGU=",
+			"path": "github.com/hashicorp/go-msgpack/codec",
+			"revision": "fa3f63826f7c23912c15263591e65d54d080b458",
+			"revisionTime": "2015-05-18T23:42:57Z"
+		},
+		{
+			"checksumSHA1": "4fgV2vzKKVyIlQ9nMyXIP5muq9E=",
+			"path": "github.com/hashicorp/go-multierror",
+			"revision": "ed905158d87462226a13fe39ddf685ea65f1c11f",
+			"revisionTime": "2016-12-16T18:43:04Z"
+		},
+		{
+			"checksumSHA1": "DbHwjQnoVm+3kaJtpwqHLkl4OQI=",
+			"path": "github.com/hashicorp/go-sockaddr",
+			"revision": "acd314c5781ea706c710d9ea70069fd2e110d61d",
+			"revisionTime": "2017-03-24T17:15:33Z"
+		},
+		{
+			"checksumSHA1": "Q30wfBRim6iFPz2peQ9LlBzxxYE=",
+			"path": "github.com/hashicorp/memberlist",
+			"revision": "679583836ce521ac7a4cd6e6806bab9dba8fbdb8",
+			"revisionTime": "2017-04-18T01:48:57Z"
+		},
+		{
+			"checksumSHA1": "E3Xcanc9ouQwL+CZGOUyA/+giLg=",
+			"path": "github.com/hashicorp/serf/coordinate",
+			"revision": "65c2babe73c7a096cd24e9eeec67613eb4e436c9",
+			"revisionTime": "2017-04-19T22:16:26Z"
+		},
+		{
+			"checksumSHA1": "lWVkjt/ljEuAOPCaWYYUoOuq57o=",
+			"path": "github.com/hashicorp/serf/serf",
+			"revision": "65c2babe73c7a096cd24e9eeec67613eb4e436c9",
+			"revisionTime": "2017-04-19T22:16:26Z"
+		},
+		{
+			"checksumSHA1": "sEvLI3uHTq1udtfFl788bIXW3CM=",
+			"path": "github.com/miekg/dns",
+			"revision": "113c7538ea6d8f429071f901bd26af59cc9676fe",
+			"revisionTime": "2017-04-26T17:46:52Z"
+		},
+		{
+			"checksumSHA1": "tnMZLo/kR9Kqx6GtmWwowtTLlA8=",
+			"path": "github.com/sean-/seed",
+			"revision": "e2103e2c35297fb7e17febb81e49b312087a2372",
+			"revisionTime": "2017-03-13T16:33:22Z"
+		}
+	],
+	"rootPath": "github.com/yangyuqian/gateway"
+}
