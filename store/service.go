@@ -51,6 +51,7 @@ func (r *serviceRegistry) Register(svc *service.Service) (err error) {
 	}
 
 	r.mutex.Lock()
+	defer r.mutex.Unlock()
 
 	if r.registry == nil {
 		return errors.Errorf("can not register service(%s) due to registry is not initialized properly", svc.Name)
@@ -62,13 +63,13 @@ func (r *serviceRegistry) Register(svc *service.Service) (err error) {
 
 	r.registry[svc.Name] = svc
 
-	r.mutex.Unlock()
-
 	return
 }
 
 func (r *serviceRegistry) DeleteByName(name string) (err error) {
 	r.mutex.Lock()
+	defer r.mutex.Unlock()
+
 	if r.registry == nil {
 		return errors.New("service registry not initialized properly")
 	}
@@ -78,14 +79,38 @@ func (r *serviceRegistry) DeleteByName(name string) (err error) {
 	}
 
 	delete(r.registry, name)
-	r.mutex.Unlock()
 	return
 }
 
-func (r *serviceRegistry) FindByLabel(name string) (svcs []*service.Service, err error) {
-	return nil, errors.New("pending")
+func (r *serviceRegistry) FindByLabel(label string) (svcs []*service.Service, err error) {
+	r.mutex.Lock()
+	defer r.mutex.Unlock()
+
+	for _, v := range r.registry {
+		for _, lb := range v.Labels {
+			if lb == label {
+				svcs = append(svcs, v)
+				break
+			}
+		}
+	}
+
+	return
 }
 
 func (r *serviceRegistry) DeleteByLabel(label string) (err error) {
-	return errors.New("pending")
+	svcs, err := r.FindByLabel(label)
+
+	r.mutex.Lock()
+	defer r.mutex.Unlock()
+
+	if err != nil {
+		return err
+	}
+
+	for _, svc := range svcs {
+		delete(r.registry, svc.Name)
+	}
+
+	return
 }
