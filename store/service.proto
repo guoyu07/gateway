@@ -4,7 +4,7 @@ package proto3;
 
 message Request {
   enum Flavour {
-    SWEET = 0;
+    SWEET = 1;
     SOUR = 1;
     UMAMI = 2;
     GOPHERLICIOUS = 3;
