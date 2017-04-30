@@ -162,20 +162,25 @@ func TestRegisterServiceRPC(t *testing.T) {
 
 	go s.Serve()
 
-	t.Run("register valid service via RPC", func(t *testing.T) {
-		t.Parallel()
+	for _, cs := range []struct {
+		name string
+		svc  *service.Service
+	}{
+		{"register valid service with only name via grpc", &service.Service{Name: "grpcsvc1"}},
+		{"register valid service with labels via grpc", &service.Service{Name: "grpcsvc2", Labels: []string{"lb1"}}},
+	} {
+		t.Run(cs.name, func(t *testing.T) {
+			cli, _ := NewStoreClient(storeAddr)
+			if err := cli.RegisterService(cs.svc); err != nil {
+				t.Errorf("can not register service via rpc due to(%+v)", err)
+			}
 
-		name := "svcrpc1"
-		cli, _ := NewStoreClient(storeAddr)
-		if err := cli.RegisterService(&service.Service{Name: name}); err != nil {
-			t.Errorf("can not register service via rpc due to(%+v)", err)
-		}
+			ServiceRegistry.mutex.Lock()
+			defer ServiceRegistry.mutex.Unlock()
 
-		ServiceRegistry.mutex.Lock()
-		defer ServiceRegistry.mutex.Unlock()
-
-		if _, ok := ServiceRegistry.registry[name]; !ok {
-			t.Errorf("service(%s) not registered in registry without any error", name)
-		}
-	})
+			if _, ok := ServiceRegistry.registry[cs.svc.Name]; !ok {
+				t.Errorf("service(%+v) not registered in registry without any error", cs.svc)
+			}
+		})
+	}
 }
