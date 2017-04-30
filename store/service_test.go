@@ -6,6 +6,10 @@ import (
 	"testing"
 )
 
+const (
+	storeAddr = ":57731"
+)
+
 func TestRegisterValidService(t *testing.T) {
 	for _, cs := range []struct {
 		name string
@@ -84,7 +88,7 @@ func TestDeleteServiceByName(t *testing.T) {
 	}
 }
 
-func TestFindByLabel(t *testing.T) {
+func TestServiceFindByLabel(t *testing.T) {
 	for _, cs := range []struct {
 		name     string
 		registry map[string]*service.Service
@@ -118,7 +122,7 @@ func TestFindByLabel(t *testing.T) {
 	}
 }
 
-func TestDeleteByLabel(t *testing.T) {
+func TestServiceDeleteByLabel(t *testing.T) {
 	for _, cs := range []struct {
 		name     string
 		registry map[string]*service.Service
@@ -147,4 +151,31 @@ func TestDeleteByLabel(t *testing.T) {
 			t.Errorf("can not delete by label due to(%+v)", err)
 		}
 	}
+}
+
+func TestRegisterServiceRPC(t *testing.T) {
+	s, err := NewStoreService(storeAddr)
+	if err != nil {
+		t.Errorf("can not start store service due to(%+v)", err)
+		t.FailNow()
+	}
+
+	go s.Serve()
+
+	t.Run("register valid service via RPC", func(t *testing.T) {
+		t.Parallel()
+
+		name := "svcrpc1"
+		cli, _ := NewStoreClient(storeAddr)
+		if err := cli.RegisterService(&service.Service{Name: name}); err != nil {
+			t.Errorf("can not register service via rpc due to(%+v)", err)
+		}
+
+		ServiceRegistry.mutex.Lock()
+		defer ServiceRegistry.mutex.Unlock()
+
+		if _, ok := ServiceRegistry.registry[name]; !ok {
+			t.Errorf("service(%s) not registered in registry without any error", name)
+		}
+	})
 }
