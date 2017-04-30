@@ -1,22 +1,17 @@
 syntax = "proto3";
 
-package proto3;
+package store;
 
-message Request {
-  enum Flavour {
-    SWEET = 1;
-    SOUR = 1;
-    UMAMI = 2;
-    GOPHERLICIOUS = 3;
-  }
-  string name = 1;
-  repeated int64 key = 2;
-  Flavour taste = 3;
-  Book book = 4;
-  repeated int64 unpacked = 5 [packed=false];
+service ServiceRegistry {
+  rpc RegisterService (ServiceRequest) returns (ServiceReply) {}
 }
 
-message Book {
-  string title = 1;
-  bytes raw_data = 2;
+message ServiceRequest {
+  string name = 1;
+  repeated string labels = 2;
+}
+
+message ServiceReply {
+  bool ok = 1;
+  string result = 2;
 }
