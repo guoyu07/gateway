@@ -8,7 +8,12 @@ service Cluster {
 }
 
 message ClusterRequest {
+  string name = 1;
+  string nodeAddr = 2;
+  string joinAddr = 3;
+  bool alive = 4;
 }
 
 message ClusterReply {
+  bool ok = 1;
 }
