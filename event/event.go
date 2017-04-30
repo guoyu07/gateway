@@ -1,11 +1,19 @@
 package event
 
+import (
+	"github.com/yangyuqian/gateway/service"
+)
+
 // EventType represents type of events, such as creating/removing a upstream
 type EventType int
 
 const (
+	// join/leave cluster
+	JOIN EventType = iota
+	LEAVE
+
 	// add a service
-	ADD_SERVICE EventType = iota
+	ADD_SERVICE
 	// delete a service
 	DEL_SERVICE
 	// add upstream to service
@@ -25,3 +33,10 @@ type Event struct {
 	// payload in bytes
 	Payload []byte
 }
+
+var (
+	// read/write channel
+	regSvc = make(chan service.Service, 10)
+	// expose write-only channel
+	RegSvcCh chan<- service.Service = regSvc
+)

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package protobuf;
+
+service Cluster {
+  rpc Join (ClusterRequest) returns (ClusterReply) {}
+  rpc Leave (ClusterRequest) returns (ClusterReply) {}
+}
+
+message ClusterRequest {
+}
+
+message ClusterReply {
+}
