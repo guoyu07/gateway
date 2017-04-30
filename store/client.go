@@ -2,6 +2,7 @@ package store
 
 import (
 	"github.com/pkg/errors"
+	protobuf "github.com/yangyuqian/gateway/protobuf"
 	"github.com/yangyuqian/gateway/service"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -24,8 +25,8 @@ func (c *storeClient) RegisterService(svc *service.Service) (err error) {
 	}
 	defer conn.Close()
 
-	cli := NewServiceRegistryClient(conn)
-	reply, err := cli.RegisterService(context.Background(), &ServiceRequest{Name: svc.Name, Labels: svc.Labels})
+	cli := protobuf.NewServiceRegistryClient(conn)
+	reply, err := cli.RegisterService(context.Background(), &protobuf.ServiceRequest{Name: svc.Name, Labels: svc.Labels})
 	if err != nil {
 		return errors.Wrapf(err, "can not register service(%+v)", svc)
 	}

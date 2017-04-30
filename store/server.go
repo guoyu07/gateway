@@ -2,6 +2,7 @@ package store
 
 import (
 	"github.com/pkg/errors"
+	protobuf "github.com/yangyuqian/gateway/protobuf"
 	"github.com/yangyuqian/gateway/service"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -19,7 +20,7 @@ func NewStoreService(addr string) (s *storeService, err error) {
 	server := grpc.NewServer()
 	s = &storeService{listener: lis, server: server}
 
-	RegisterServiceRegistryServer(server, s)
+	protobuf.RegisterServiceRegistryServer(server, s)
 	reflection.Register(server)
 	return
 }
@@ -47,10 +48,10 @@ func (s *storeService) Serve() (err error) {
 	return
 }
 
-func (s *storeService) RegisterService(ctx context.Context, req *ServiceRequest) (resp *ServiceReply, err error) {
+func (s *storeService) RegisterService(ctx context.Context, req *protobuf.ServiceRequest) (resp *protobuf.ServiceReply, err error) {
 	if regerr := ServiceRegistry.Register(&service.Service{Name: req.GetName(), Labels: req.GetLabels()}); regerr != nil {
-		resp = &ServiceReply{Ok: false, Result: regerr.Error()}
+		resp = &protobuf.ServiceReply{Ok: false, Result: regerr.Error()}
 		return
 	}
-	return &ServiceReply{Ok: true, Result: "register service successfully"}, nil
+	return &protobuf.ServiceReply{Ok: true, Result: "register service successfully"}, nil
 }
