@@ -1,7 +1,9 @@
 package store
 
 import (
+	protobuf "github.com/yangyuqian/gateway/protobuf"
 	"github.com/yangyuqian/gateway/service"
+	"golang.org/x/net/context"
 	"reflect"
 	"testing"
 )
@@ -9,6 +11,18 @@ import (
 const (
 	storeAddr = ":57731"
 )
+
+var storeSvc *storeService
+
+func init() {
+	s, err := NewStoreService(storeAddr)
+	if err != nil {
+		panic(err)
+	}
+	storeSvc = s
+
+	go s.Serve()
+}
 
 func TestRegisterValidService(t *testing.T) {
 	for _, cs := range []struct {
@@ -149,15 +163,7 @@ func TestServiceDeleteByLabel(t *testing.T) {
 	}
 }
 
-func TestRegisterServiceRPC(t *testing.T) {
-	s, err := NewStoreService(storeAddr)
-	if err != nil {
-		t.Errorf("can not start store service due to(%+v)", err)
-		t.FailNow()
-	}
-
-	go s.Serve()
-
+func TestRegisterServiceRPCClient(t *testing.T) {
 	for _, cs := range []struct {
 		name string
 		svc  *service.Service
@@ -168,6 +174,29 @@ func TestRegisterServiceRPC(t *testing.T) {
 		t.Run(cs.name, func(t *testing.T) {
 			cli, _ := NewStoreClient(storeAddr)
 			if err := cli.RegisterService(cs.svc); err != nil {
+				t.Errorf("can not register service via rpc due to(%+v)", err)
+			}
+
+			ServiceRegistry.mutex.Lock()
+			defer ServiceRegistry.mutex.Unlock()
+
+			if _, ok := ServiceRegistry.registry[cs.svc.Name]; !ok {
+				t.Errorf("service(%+v) not registered in registry without any error", cs.svc)
+			}
+		})
+	}
+}
+
+func TestRegisterServiceRPCServer(t *testing.T) {
+	for _, cs := range []struct {
+		name string
+		svc  *service.Service
+	}{
+		{"register valid service with only name via grpc", &service.Service{Name: "grpcsvc1"}},
+		{"register valid service with labels via grpc", &service.Service{Name: "grpcsvc2", Labels: []string{"lb1"}}},
+	} {
+		t.Run(cs.name, func(t *testing.T) {
+			if _, err := storeSvc.RegisterService(context.Background(), &protobuf.ServiceRequest{Name: cs.svc.Name, Labels: cs.svc.Labels}); err != nil {
 				t.Errorf("can not register service via rpc due to(%+v)", err)
 			}
 
