@@ -3,7 +3,8 @@ package types
 // Endpoint represents the a interface
 // for a upstream which is used to do a load balancing
 type Endpoint struct {
-	Protocol string // either TCP or UDP
+	Protocol string // L3: such as TCP or UDP
+	Scheme   string // L7: such as http or https
 	Host     string // endpoint host without NAT
 	Port     int    // endpoint port
 }

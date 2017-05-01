@@ -13,6 +13,8 @@ type Router struct {
 	Matchers Matchers
 	// destination service when request is matched by all matchers
 	Service string
+	// priority of the router
+	Priority uint8
 }
 
 // determine upstream with request
